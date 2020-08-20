@@ -3,7 +3,7 @@
 namespace Godwit.HandleEmailConfirmedEvent.Model {
     public class Event {
         [JsonPropertyName("session_variables")]
-        public SessionVariables SessionVariables { get; set; }
+        public SessionVariables Session { get; set; }
 
         [JsonPropertyName("op")] public string Operation { get; set; }
 

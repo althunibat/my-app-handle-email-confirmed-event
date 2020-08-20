@@ -14,10 +14,10 @@ namespace Godwit.HandleEmailConfirmedEvent.Controllers {
     [ApiController]
     [Route("")]
     public class HasuraController : ControllerBase {
-        private readonly ILogger _logger;
         private readonly IRepository<Notification, long> _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<HasuraEvent> _validator;
+        private readonly ILogger<HasuraController> _logger;
 
         public HasuraController(IValidator<HasuraEvent> validator,
             ILogger<HasuraController> logger, IUnitOfWork unitOfWork,
@@ -30,10 +30,14 @@ namespace Godwit.HandleEmailConfirmedEvent.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] HasuraEvent model) {
+            _logger.LogInformation($"Call Started by {model?.Event.Session.UserId} having role {model?.Event.Session.Role}");
             var validation = _validator.Validate(model);
             if (!validation.IsValid)
+            {
+                _logger.LogWarning("request validation failed!");
                 return BadRequest(validation.Errors.Select(e => e.ErrorMessage)
                 );
+            }
 
             try {
                 var user = model.Event.Data.NewValue;
@@ -48,9 +52,10 @@ namespace Godwit.HandleEmailConfirmedEvent.Controllers {
 
                 await _repository.Add(notification);
                 var result = await _unitOfWork.SaveAsync().ConfigureAwait(false);
-                if (!result.Succeeded)
-                    return Problem(result.Errors.First().ErrorMessages.First().Value);
-                return Ok();
+                if (result.Succeeded) return Ok();
+                _logger.LogWarning(result.Errors.First().ErrorMessages.First().Value);
+                return Problem(result.Errors.First().ErrorMessages.First().Value);
+
             }
             catch (Exception e) {
                 _logger.LogError(new EventId(1001, "Exception"), e, "Unable to Save Data!");
