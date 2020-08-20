@@ -30,7 +30,7 @@ namespace Godwit.HandleEmailConfirmedEvent.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] HasuraEvent model) {
-            _logger.LogInformation($"Call Started by {model?.Event.Session.UserId} having role {model?.Event.Session.Role}");
+            _logger.LogInformation($"Call Started by {model.Event?.Session?.UserId ?? "not-provided"} having role {model.Event?.Session?.Role ?? "not-provided"}");
             var validation = _validator.Validate(model);
             if (!validation.IsValid)
             {
