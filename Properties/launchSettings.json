@@ -1,0 +1,19 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+   
+    "HandleEmailConfirmedEvent": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "",
+      "applicationUrl": "http://0.0.0.0:5788",
+      "environmentVariables": {
+        "DB_USERNAME": "postgres",
+        "DB_PASSWORD": "1qaz!QAZ",
+        "DB_HOST": "apps.db.godwit.io",
+        "HASURA_DB": "keto_db",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

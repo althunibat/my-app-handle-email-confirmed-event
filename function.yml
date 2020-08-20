@@ -1,0 +1,14 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: https://fn.godwit.io
+functions:
+  handle-email-confirmed-event:
+    lang: dockerfile
+    handler: .
+    image: harbor.godwit.io/library/email-confirmed-handler:${DRONE_TAG}
+    environment:
+     DB_USERNAME: postgres
+     DB_PASSWORD: 1qaz!QAZ
+     DB_HOST: postgres.apps.svc
+     HASURA_DB: keto_db
